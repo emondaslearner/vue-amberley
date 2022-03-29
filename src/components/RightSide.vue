@@ -11,10 +11,12 @@
             <v-text-field
               label="Client name"
               hide-details="auto"
+              :rules="rules"
               class="pa-0 ma-0"
             ></v-text-field>
             <v-text-field
               label="Client email"
+              :rules="rules"
               hide-details="auto"
               class="pa-0 ma-0 mt-3"
             ></v-text-field>
@@ -41,12 +43,23 @@
         0.00
         <sub>(Vat incl.)</sub>
       </h1>
+      <v-row className="d-flex pdf">
+        <h3 class="mt-5 ml-5 mb-3">attach pdf in mail</h3>
+        <v-col class="ma-3 pdfSelector" cols="12" sm="3">
+          <button></button>
+        </v-col>
+      </v-row>
     </v-col>
-    <v-btn class="mx-auto mt-5 d-block" style="width:60%"> Send Invoice </v-btn>
+    <v-btn class="mx-auto mt-5 d-block" style="width: 60%">
+      Send Invoice
+    </v-btn>
   </div>
 </template>
 <script>
 export default {
   name: "RightSide",
+  data: () => ({
+    rules: [(value) => !!value || "Required."],
+  }),
 };
 </script>

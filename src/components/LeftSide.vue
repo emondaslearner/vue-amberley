@@ -68,12 +68,12 @@
             <v-date-picker
               v-model="date"
               :active-picker.sync="activePicker"
-              :max="
+              :min="
                 new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
                   .toISOString()
                   .substr(0, 10)
               "
-              min="1950-01-01"
+              max="2050-01-01"
               @change="save"
             ></v-date-picker>
           </v-menu>
@@ -84,7 +84,7 @@
           <p>Billed to</p>
           <v-text-field
             label="Enter customer name"
-            :rules="rules"
+            :rules="clientName"
             hide-details="auto"
             color="success  text--lighten-1"
             class="chris"
@@ -96,6 +96,7 @@
     </v-row>
     <div class="invoice mx-auto">
       <h6>Item Details</h6>
+      <p color="red" class="text-center">{{ itemError && itemError }}</p>
       <table>
         <tr>
           <td>Item name</td>
@@ -125,21 +126,28 @@
             <v-text-field
               label="Item name"
               hide-details="auto"
-              class="mt-0 pt-1 pb-1"
+              class="mt-0 pt-1 pb-1 pl-2"
+              v-model="item"
             ></v-text-field>
           </td>
           <td>
             <v-text-field
               label="unit"
               hide-details="auto"
-              class="mt-0 pt-1 pb-1"
+              class="mt-0 pt-1 pb-1 pl-2"
+              v-model="unit"
+              type="number"
+              @input="setTotalOfItem"
             ></v-text-field>
           </td>
           <td>
             <v-text-field
               label="rate"
               hide-details="auto"
-              class="mt-0 pt-1 pb-1"
+              class="mt-0 pt-1 pb-1 pl-2"
+              v-model="rate"
+              type="number"
+              @input="setTotalOfItem"
             ></v-text-field>
           </td>
           <td>
@@ -148,14 +156,16 @@
               class="m-0 p-0 select"
               :items="items"
               label="Vat"
+              v-model="vat"
+              @change="vatChanged"
             ></v-select>
           </td>
           <td>
             <i class="moneySign fa fa-sterling-sign"></i>
-            0.00
+            {{this.itemTotal ? this.itemTotal : '0.00'}}
           </td>
           <td>
-            <i class="plus fa fa-circle-plus"></i>
+            <i v-on:click="addItem" class="plus"><span>+</span></i>
           </td>
         </tr>
         <br />
@@ -208,12 +218,25 @@ export default {
   data: () => ({
     rules: [
       (value) => !!value || "Required.",
-      (value) => (value && value.length >= 3) || "Min 3 characters",
+      (value) => {
+        const number = parseInt(value)
+        if(!number){
+          return 'You can enter only number'
+        }
+      },
+    ],
+    clientName: [
+      (value) => !!value || "Required."
     ],
     activePicker: null,
     date: null,
     menu: false,
     items: ["5%", "12.5%", "20%"],
+    itemError:'',
+    itemVal:[],
+    itemTotal:0,
+    totalVat:0,
+    vatVal:0
   }),
   watch: {
     menu(val) {
@@ -221,6 +244,37 @@ export default {
     },
   },
   methods: {
+    setTotalOfItem(){
+      const unit = this.unit;
+      const rate = this.rate;
+
+      this.itemTotal = unit * rate;
+      if(this.vat != undefined){
+        const removeParsentSign = this.vat.slice(0, -1)
+        const mainValue = parseFloat(removeParsentSign)
+        const vatValue = (this.itemTotal / 100) * mainValue
+        if(vatValue){
+          this.vatVal = vatValue
+        }
+      }
+    },
+    vatChanged(){
+      const removeParsentSign = this.vat.slice(0, -1)
+      const mainValue = parseFloat(removeParsentSign)
+      const vatValue = (this.itemTotal / 100) * mainValue
+      this.vatVal = vatValue
+    },
+    addItem(){
+      const itemName = this.item;
+      const unit = this.unit;
+      const rate = this.rate;
+      if(itemName == undefined || unit == undefined || rate == undefined){
+        this.itemError = 'fill all fields';
+      }else{
+        const getItemData = {itemName,unit,rate,vat:this.vatVal,total:this.itemTotal}
+        this.itemVal.push(getItemData)
+      }
+    },
     save(date) {
       this.$refs.menu.save(date);
     },

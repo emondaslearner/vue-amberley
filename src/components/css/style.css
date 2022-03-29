@@ -69,6 +69,10 @@
   .invoiceInformation .theme--light.v-text-field > .v-input__control > .v-input__slot:before{
     background-color: white;
   }
+  .invoiceInformation .v-text-field input{
+    color:white;
+    font-size:13px;
+  }
   .invoiceInformation .right p {
     font-size: 12px;
     color: white;
@@ -140,12 +144,20 @@
   }
   .invoice table tr .plus {
     font-size: 20px;
-    color: #7290fa;
+    background-color: #7290fa;
+    color:white;
+    border-radius:10px;
+    font-style:unset;
     cursor: pointer;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    width:20px;
+    height:20px;
     transition: all ease 0.3s;
   }
   .invoice table tr .plus:hover {
-    color: #466df8;
+    background-color: #466df8;
   }
   .paymentMethod {
     width: 90%;
@@ -229,4 +241,25 @@
     cursor: pointer;
     padding:10px;
   }
+.rightSide .pdfSelector{
+  width:50px !important;
+  padding:5px;
+  height:40px;
+  background-color:rgb(206, 202, 202);
+  overflow: hidden;
+  border-radius:20px;
+  cursor: pointer;
+  position: relative;
+}
+.rightSide .pdfSelector button{
+  background-color:white;
+  border-radius:50px;
+  width:30px;
+  height:30px;
+  border:none;
+  position:absolute;
+  left:5px;
+  cursor: pointer;
+  transform:.3s all ease;
+}
   
