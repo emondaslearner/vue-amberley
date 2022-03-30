@@ -13,12 +13,14 @@
               hide-details="auto"
               :rules="rules"
               class="pa-0 ma-0"
+              v-model="name"
             ></v-text-field>
             <v-text-field
               label="Client email"
               :rules="rules"
               hide-details="auto"
               class="pa-0 ma-0 mt-3"
+              v-model="email"
             ></v-text-field>
           </div>
         </v-col>
@@ -40,19 +42,28 @@
       </div>
       <h1>
         <i class="rightMoneySign fa fa-sterling-sign"></i>
-        0.00
+        {{grandTotal ? grandTotal : '0.00'}}
         <sub>(Vat incl.)</sub>
       </h1>
       <v-row className="d-flex pdf">
         <h3 class="mt-5 ml-5 mb-3">attach pdf in mail</h3>
-        <v-col class="ma-3 pdfSelector" cols="12" sm="3">
+        <v-col v-on:click="togglePdf" class="ma-3 pdfSelector" cols="12" sm="3">
           <button></button>
         </v-col>
       </v-row>
+      <v-file-input
+        v-if="this.pdfStatus"
+        truncate-length="15"
+        label="Select file"
+        v-model="pdf"
+        @change="selectedPdf"
+      ></v-file-input>
     </v-col>
-    <v-btn class="mx-auto mt-5 d-block" style="width: 60%">
+    <p style="color:red" class="text-center">{{pdfError != '' ? pdfError : ''}}</p>
+    <v-btn v-on:click="sendData"  class="mx-auto mt-5 d-block" style="width: 60%">
       Send Invoice
     </v-btn>
+    <p style="color:red" class="mt-5 text-center">{{this.error != '' ? this.error : ''}}</p>
   </div>
 </template>
 <script>
@@ -60,6 +71,40 @@ export default {
   name: "RightSide",
   data: () => ({
     rules: [(value) => !!value || "Required."],
+    click:true,
+    pdfStatus:false,
+    pdfError:'',
+    finalPdf: null
   }),
+  props:[
+    'error',
+    'grandTotal',
+    'success'
+  ],
+  methods:{
+    sendData(){
+      this.$emit('name', this.name,this.email,this.finalPdf);
+    },
+    togglePdf(){
+      this.pdfStatus ? this.pdfStatus = false : this.pdfStatus = true
+      if(this.pdfStatus){
+        document.querySelector('.pdfSelector button').style.left = '60px'
+        document.querySelector('.pdfSelector').style.backgroundColor = '#2B3EB8'
+      }else{
+        document.querySelector('.pdfSelector button').style.left = '5px'
+        document.querySelector('.pdfSelector').style.backgroundColor = '#CECACA'
+      }
+    },
+    selectedPdf(){
+      const type = this.pdf.type.split('/').pop()
+      if(type != 'pdf'){
+        this.pdfError = 'You can only select pdf file'
+        this.pdf = ''
+      }else{
+        this.pdfError = ''
+        this.finalPdf = this.pdf
+      }
+    }
+  }
 };
 </script>

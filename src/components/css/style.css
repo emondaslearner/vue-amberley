@@ -65,6 +65,8 @@
   }
   .invoiceInformation .v-icon{
     color: white;
+    margin-left: 15px;
+
   }
   .invoiceInformation .theme--light.v-text-field > .v-input__control > .v-input__slot:before{
     background-color: white;
@@ -73,6 +75,11 @@
     color:white;
     font-size:13px;
   }
+  input::-webkit-inner-spin-button {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;  
+}
   .invoiceInformation .right p {
     font-size: 12px;
     color: white;
@@ -132,11 +139,15 @@
     margin-top: 10px;
     width: 20%;
   }
-  .invoice table .items td {
+  .invoice .items td {
     padding: 10px !important;
+  }
+  .invoice .items{
+    margin-bottom:20px !important;
   }
   .invoice table .close {
     cursor: pointer;
+    font-style:unset;
   }
   .invoice table tr td:nth-child(5) {
     width: 15%;
