@@ -74,7 +74,10 @@ export default {
     click:true,
     pdfStatus:false,
     pdfError:'',
-    finalPdf: null
+    finalPdf: null,
+    name:'',
+    email:'',
+    pdf:{}
   }),
   props:[
     'error',
@@ -83,7 +86,7 @@ export default {
   ],
   methods:{
     sendData(){
-      this.$emit('name', this.name,this.email,this.finalPdf);
+      this.$emit('clickResponse', this.name,this.email,this.finalPdf);
     },
     togglePdf(){
       this.pdfStatus ? this.pdfStatus = false : this.pdfStatus = true
@@ -95,11 +98,13 @@ export default {
         document.querySelector('.pdfSelector').style.backgroundColor = '#CECACA'
       }
     },
+  
     selectedPdf(){
+      if(!this.pdf) return;
       const type = this.pdf.type.split('/').pop()
       if(type != 'pdf'){
         this.pdfError = 'You can only select pdf file'
-        this.pdf = ''
+        this.pdf = {}
       }else{
         this.pdfError = ''
         this.finalPdf = this.pdf

@@ -236,7 +236,7 @@
       </div>
     </v-col>
     <v-col cols="12" md="4">
-      <RightSide :success="this.success" :grandTotal="totalVat + subTotal" :error="valueEmptyError" @name="sendData" />
+      <RightSide :success="this.success" :grandTotal="totalVat + subTotal" :error="valueEmptyError" @clickResponse="submitData" />
     </v-col>
   </v-row>
 </template>
@@ -250,12 +250,6 @@ export default {
   data: () => ({
     rules: [
       (value) => !!value || "Required.",
-      (value) => {
-        const number = parseFloat(value);
-        if (!number) {
-          return "You can enter only number";
-        }
-      },
     ],
     clientName: [(value) => !!value || "Required."],
     date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
@@ -269,7 +263,15 @@ export default {
     subTotal: 0,
     valueEmptyError: "",
     itemEmptyError: "",
-    success : false
+    success : false,
+    item:'',
+    unit:'',
+    rate:'',
+    invoiceNo:'',
+    purchaseNo:'',
+    customerName:'',
+    description:'',
+    vat:''
   }),
   watch: {
     menu(val) {
@@ -355,7 +357,7 @@ export default {
     save(date) {
       this.$refs.menu.save(date);
     },
-    sendData(name, email, pdf) {
+    submitData(name, email, pdf) {
       const invoiceNo = this.invoiceNo;
       const purchaseNo = this.purchaseNo;
       const customerName = this.customerName;
@@ -394,13 +396,13 @@ export default {
         formData.append('dueDate',this.date);
         formData.append('description',this.description);
 
-        fetch('https://magenta-mochi-63b8af.netlify.app/.netlify/functions/api/doSomething',{
+        fetch('https://invoice-vue-automation-server.netlify.app/.netlify/functions/api/doSomething',{
           method:"POST",
           body:formData
         })
         .then(res => res.json())
-        .then(data => {
-          data
+        .then( ()=> {
+          
         })
       }
     },
