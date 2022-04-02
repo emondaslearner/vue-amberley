@@ -28,6 +28,8 @@
       />
       <input type="submit" class="submit-btn" />
     </form>
+    <p style="color:green" v-if="this.successMessage != ''">{{this.successMessage}}</p>
+    <p style="color:red" v-if="this.error != ''">{{this.error}}</p>
   </div>
 </template>
 <script>
@@ -41,6 +43,8 @@ export default {
       email: "",
       otp: "",
     },
+    error:'',
+    successMessage:''
   }),
   methods: {
     handlerInputChange(e) {
@@ -68,9 +72,8 @@ export default {
       e.preventDefault();
     },
     verifyOTP(e) {
-      fetch(`https://invoice-vue-automation-server.netlify.app/.netlify/functions/api/validateOTP/${this.inputValue.otp}/${this.inputValue.email}`, {
+      fetch(`http://localhost:9000/.netlify/functions/api/validateOTP/${this.inputValue.otp}/${this.inputValue.email}`, {
         method: "GET",
-        mode: 'cors',
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
@@ -78,11 +81,17 @@ export default {
       })
         .then((res) => res.json())
         .then((data) => {
-            this.existsOTP = data.success
-            this.success = data.success
-            this.message = data.message
-            sessionStorage.setItem("login", "success");
-            this.$router.push('/')
+            if(data.success == true){
+              this.existsOTP = data.success
+              this.success = data.success
+              this.successMessage = "Otp matched successfully"
+              sessionStorage.setItem("login", "success");
+              this.$router.push('/')
+              this.error = ""
+            }else{
+              this.successMessage = ""
+              this.error = "OTP  didn't Matched"
+            }
         });
       e.preventDefault();
     },
