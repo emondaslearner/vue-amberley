@@ -236,7 +236,7 @@
       </div>
     </v-col>
     <v-col cols="12" md="4">
-      <RightSide :success="this.success" :grandTotal="totalVat + subTotal" :error="valueEmptyError" @clickResponse="submitData" />
+      <RightSide  ref="childComponent" :success="this.success" :grandTotal="totalVat + subTotal" :error="valueEmptyError" @clickResponse="submitData" />
     </v-col>
   </v-row>
 </template>
@@ -249,9 +249,9 @@ export default {
   },
   data: () => ({
     rules: [
-      (value) => !!value || "Required.",
+      (value) => value != '' || "Required.",
     ],
-    clientName: [(value) => !!value || "Required."],
+    clientName: [(value) => value != '' || "Required."],
     date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
     menu: false,
     items: ["5%", "12.5%", "20%"],
@@ -277,6 +277,12 @@ export default {
     menu(val) {
       val && setTimeout(() => (this.activePicker = "YEAR"));
     },
+  },
+  created(){
+    const getStatus = sessionStorage.getItem("login");
+    if(!getStatus){
+      this.$router.push('/login')
+    }
   },
   methods: {
     closeItem(id) {
@@ -375,14 +381,13 @@ export default {
       } else {
         this.valueEmptyError = "";
         this.itemEmptyError = "";
-
+        document.querySelector('.loader').style.display = 'flex'
         const total = this.subTotal + this.totalVat;
         const issueDate = new Date(
           Date.now() - new Date().getTimezoneOffset() * 60000
         )
           .toISOString()
           .substr(0, 10);
-        console.log(pdf)
         const formData = new FormData();
         formData.append('file',pdf);
         formData.append('invoiceNo',invoiceNo);
@@ -402,7 +407,21 @@ export default {
         })
         .then(res => res.json())
         .then( ()=> {
-          
+          this.invoiceNo = undefined
+          this.purchaseNo = undefined
+          this.customerName = undefined
+          this.description = ''
+          this.vat = ''
+          this.itemVal = []
+          this.total = 0
+          this.subTotal = 0
+          this.totalVat = 0
+          this.$refs.childComponent.afterSubmitData();
+          document.querySelector('.loader').style.display = 'none'
+          document.querySelector('.alert').style.display = 'block'
+          setTimeout(() => {
+            document.querySelector('.alert').style.display = 'none'
+          },3000)
         })
       }
     },

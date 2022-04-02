@@ -1,4 +1,60 @@
-  
+.login>h1{
+  text-align: center;
+}
+.login{
+  width:50%;
+  margin:auto;
+  height: 100vh;
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.login input:focus {
+border: none;
+}
+.login input:active {
+border: none;
+}
+.login input {
+border: none;
+font-size: 18px;
+}
+.login-image{
+width: 80%;
+display: block;
+margin: auto;
+}
+.login-text {
+color: rgb(77, 77, 224);
+}
+.login form{
+width:70%;
+display: block;
+margin: 20px auto;
+}
+.input-box {
+width: 70%;
+padding:10px 15px;
+border: 1px solid rgb(95, 95, 235) !important;
+}
+.input-box:focus {
+outline:none;
+}
+.submit-btn {
+background: rgb(96, 96, 236);
+padding:10px 15px;
+margin-left: 10px;
+color: aliceblue;
+cursor: pointer;
+transition: all ease .3s;
+border:1px solid transparent !important;
+}
+.submit-btn:hover{
+color:rgb(96, 96, 236);
+border:1px solid rgb(96, 96, 236) !important;
+background: none;
+}
   .header {
     width: 90%;
   }
@@ -60,11 +116,11 @@
     margin: 0;
   }
   .invoiceInformation .v-label{
-    color: white;
+    color: white !important;
     font-size:13px;
   }
   .invoiceInformation .v-icon{
-    color: white;
+    color: white !important;
     margin-left: 15px;
 
   }
@@ -72,7 +128,7 @@
     background-color: white;
   }
   .invoiceInformation .v-text-field input{
-    color:white;
+    color:white !important;
     font-size:13px;
   }
   input::-webkit-inner-spin-button {
@@ -273,4 +329,21 @@
   cursor: pointer;
   transform:.3s all ease;
 }
-  
+.loader{
+  width:100%;
+  height:100%;
+  background-color:rgba(221, 221, 221, 0.389);
+  position: fixed;
+  top:0%;
+  left:0%;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+.alert{
+  width:40%;
+  position: fixed;
+  top:80%;
+  left:30%;
+  display:none;
+}

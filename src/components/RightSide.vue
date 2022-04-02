@@ -70,7 +70,7 @@
 export default {
   name: "RightSide",
   data: () => ({
-    rules: [(value) => !!value || "Required."],
+    rules: [(value) => value != '' || "Required."],
     click:true,
     pdfStatus:false,
     pdfError:'',
@@ -82,7 +82,8 @@ export default {
   props:[
     'error',
     'grandTotal',
-    'success'
+    'success',
+    'afterSentData'
   ],
   methods:{
     sendData(){
@@ -96,6 +97,7 @@ export default {
       }else{
         document.querySelector('.pdfSelector button').style.left = '5px'
         document.querySelector('.pdfSelector').style.backgroundColor = '#CECACA'
+        this.pdf = {}
       }
     },
   
@@ -109,6 +111,11 @@ export default {
         this.pdfError = ''
         this.finalPdf = this.pdf
       }
+    },
+    afterSubmitData(){
+      this.pdf = {}
+      this.name = undefined
+      this.email = undefined
     }
   }
 };
