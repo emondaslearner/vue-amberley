@@ -418,9 +418,16 @@ export default {
           this.totalVat = 0
           this.$refs.childComponent.afterSubmitData();
           document.querySelector('.loader').style.display = 'none'
-          document.querySelector('.alert').style.display = 'block'
+          document.querySelector('.alertSuccess').style.display = 'block'
           setTimeout(() => {
-            document.querySelector('.alert').style.display = 'none'
+            document.querySelector('.alertSuccess').style.display = 'none'
+          },3000)
+        })
+        .catch(() => {
+          document.querySelector('.loader').style.display = 'none'
+          document.querySelector('.alertError').style.display = 'block'
+          setTimeout(() => {
+            document.querySelector('.alertError').style.display = 'none'
           },3000)
         })
       }
