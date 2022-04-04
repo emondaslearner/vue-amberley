@@ -271,7 +271,7 @@ export default {
     purchaseNo:'',
     customerName:'',
     description:'',
-    vat:''
+    vat:'20%'
   }),
   watch: {
     menu(val) {
@@ -358,6 +358,7 @@ export default {
         this.unit = "";
         this.rate = "";
         this.itemTotal = 0;
+        this.vat = '20%'
       }
     },
     save(date) {
@@ -368,15 +369,15 @@ export default {
       const purchaseNo = this.purchaseNo;
       const customerName = this.customerName;
       if (
-        invoiceNo == undefined ||
-        purchaseNo == undefined ||
-        customerName == undefined ||
-        name == undefined ||
-        email == undefined ||
+        invoiceNo == '' ||
+        purchaseNo == '' ||
+        customerName == '' ||
+        name == '' ||
+        email == '' ||
         this.date == null
       ) {
         this.valueEmptyError = "Please fill all fields";
-      } else if (this.itemVal.length == 0) {
+      } else if (this.itemVal.length == 0 && this.item == '' || this.unit == '' || this.rate == '') {
         this.itemEmptyError = "You have not added any item";
       } else {
         this.valueEmptyError = "";
@@ -388,6 +389,14 @@ export default {
         )
           .toISOString()
           .substr(0, 10);
+        const getItems = {
+          itemName:this.item,
+          unit:this.unit,
+          rate:this.rate,
+          vat: this.vatVal,
+          total: this.itemTotal
+        }
+        const items = [...this.itemVal,getItems]
         const formData = new FormData();
         formData.append('file',pdf);
         formData.append('invoiceNo',invoiceNo);
@@ -395,7 +404,7 @@ export default {
         formData.append('customerName',customerName);
         formData.append('name',name);
         formData.append('email',email);
-        formData.append('items',JSON.stringify(this.itemVal));
+        formData.append('items',JSON.stringify(items));
         formData.append('total',total);
         formData.append('issueDate',issueDate);
         formData.append('dueDate',this.date);
@@ -411,7 +420,11 @@ export default {
           this.purchaseNo = undefined
           this.customerName = undefined
           this.description = ''
-          this.vat = ''
+          this.vat = '20%'
+          this.item = ''
+          this.unit = ''
+          this.rate = ''
+          this.itemTotal = 0
           this.itemVal = []
           this.total = 0
           this.subTotal = 0
