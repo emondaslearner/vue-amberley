@@ -18,6 +18,11 @@
         Please check you internet connection and try again
       </v-alert>
     </div>
+    <div style="top: 90%" class="alert logged">
+      <v-alert dense text type="success" class="successAlert">
+        Successfully logged in
+      </v-alert>
+    </div>
     <router-view/>
   </v-app>
 </template>

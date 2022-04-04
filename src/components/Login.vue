@@ -119,7 +119,7 @@ export default {
               document.querySelector(".logged").style.display = "block";
               setTimeout(() => {
                 document.querySelector(".logged").style.display = "none";
-              }, 3000);
+              }, 5000);
               this.existsOTP = data.success;
               this.success = data.success;
               sessionStorage.setItem("login", "success");
