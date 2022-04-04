@@ -72,7 +72,7 @@ export default {
       e.preventDefault();
     },
     verifyOTP(e) {
-      fetch(`http://localhost:9000/.netlify/functions/api/validateOTP/${this.inputValue.otp}/${this.inputValue.email}`, {
+      fetch(`https://invoice-vue-automation-server.netlify.app/.netlify/functions/api/validateOTP/${this.inputValue.otp}/${this.inputValue.email}`, {
         method: "GET",
         headers: {
           Accept: "application/json",
