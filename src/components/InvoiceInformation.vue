@@ -212,7 +212,7 @@
             </v-col>
           </v-row>
         </div>
-      </div>z
+      </div>
     </v-col>
     <v-col cols="12" md="4">
       <RightSide  ref="childComponent" :success="this.success" :grandTotal="totalVat + subTotal" :error="valueEmptyError" @clickResponse="submitData" />
