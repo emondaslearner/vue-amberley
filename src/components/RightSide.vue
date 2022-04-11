@@ -9,18 +9,19 @@
           </div>
           <div class="ml-5">
             <v-text-field
-              label="Client name"
+              label="Approver name"
               hide-details="auto"
               :rules="rules"
               class="pa-0 ma-0"
               v-model="name"
             ></v-text-field>
             <v-text-field
-              label="Client email"
+              label="Approver email"
               :rules="rules"
               hide-details="auto"
               class="pa-0 ma-0 mt-3"
               v-model="email"
+              type="email"
             ></v-text-field>
           </div>
         </v-col>
@@ -42,24 +43,24 @@
       </div>
       <h1>
         <i class="rightMoneySign fa fa-sterling-sign"></i>
-        {{grandTotal ? grandTotal : '0.00'}}
+        {{grandTotal ? grandTotal.toFixed() : '0.00'}}
         <sub>(Vat incl.)</sub>
       </h1>
       <v-row className="d-flex pdf">
-        <h3 class="mt-5 ml-5 mb-3">attach pdf in mail</h3>
-        <v-col v-on:click="togglePdf" class="ma-3 pdfSelector" cols="12" sm="3">
-          <button></button>
+        <h3 class="mt-8 ml-5 mb-3">attach pdf in mail</h3>
+        <v-col cols="12" sm="3">
+          <v-checkbox
+            v-model="checkbox"
+          ></v-checkbox>
         </v-col>
       </v-row>
       <v-file-input
-        v-if="this.pdfStatus"
+        v-if="checkbox"
         truncate-length="15"
         label="Select file"
         v-model="pdf"
-        @change="selectedPdf"
       ></v-file-input>
     </v-col>
-    <p style="color:red" class="text-center">{{pdfError != '' ? pdfError : ''}}</p>
     <v-btn v-on:click="sendData"  class="mx-auto mt-5 d-block" style="width: 60%">
       Send Invoice
     </v-btn>
@@ -72,12 +73,12 @@ export default {
   data: () => ({
     rules: [(value) => value != '' || "Required."],
     click:true,
-    pdfStatus:false,
     pdfError:'',
     finalPdf: null,
     name:'',
     email:'',
-    pdf:{}
+    pdf:{},
+    checkbox:false
   }),
   props:[
     'error',
@@ -87,30 +88,7 @@ export default {
   ],
   methods:{
     sendData(){
-      this.$emit('clickResponse', this.name,this.email,this.finalPdf);
-    },
-    togglePdf(){
-      this.pdfStatus ? this.pdfStatus = false : this.pdfStatus = true
-      if(this.pdfStatus){
-        document.querySelector('.pdfSelector button').style.left = '60px'
-        document.querySelector('.pdfSelector').style.backgroundColor = '#2B3EB8'
-      }else{
-        document.querySelector('.pdfSelector button').style.left = '5px'
-        document.querySelector('.pdfSelector').style.backgroundColor = '#CECACA'
-        this.pdf = {}
-      }
-    },
-  
-    selectedPdf(){
-      if(!this.pdf) return;
-      const type = this.pdf.type.split('/').pop()
-      if(type != 'pdf'){
-        this.pdfError = 'You can only select pdf file'
-        this.pdf = {}
-      }else{
-        this.pdfError = ''
-        this.finalPdf = this.pdf
-      }
+      this.$emit('clickResponse', this.name,this.email,this.pdf);
     },
     afterSubmitData(){
       this.pdf = {}

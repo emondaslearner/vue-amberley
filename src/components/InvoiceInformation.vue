@@ -4,19 +4,14 @@
       <div class="ml-5 mt-5 mb-5 pt-5 pb-5 white leftSide">
         <v-row no-gutters>
           <v-col cols="12" md="6" sm="5" class="left">
-            <img class="m-3" src="./image/Amberley-Logo-blue.png" alt="" />
+            <img class="m-3 ml-10" src="./image/next15.png" alt="" />
           </v-col>
           <v-col
             cols="12"
             md="6"
             class="headRight justify-end align-end pr-5 mb-5 d-flex"
           >
-            <div>
-              <h5>AMBERLEY INNOVATIONS LIMITED</h5>
-              <p>Amberley, First Avenue,</p>
-              <p>Amersham,Buckinghamshire, United,</p>
-              <p>Kingdom, HP79BL,</p>
-            </div>
+          
           </v-col>
         </v-row>
         <v-row no-gutters class="mx-auto invoiceInformation">
@@ -89,17 +84,7 @@
           </v-col>
           <v-col cols="12" sm="6" class="d-flex ml-10 justify-end align-end">
             <v-col cols="12" md="7" class="pt-3 pb-3 right">
-              <p>Billed to</p>
-              <v-text-field
-                label="Enter customer name"
-                :rules="clientName"
-                hide-details="auto"
-                color="success  text--lighten-1"
-                class="chris"
-                v-model="customerName"
-              />
-              <p>NEXT FIFTEEN COMMUNICATION GROUP PLC</p>
-              <p>Bermondsey Street, London, United Kingdom</p>
+              
             </v-col>
           </v-col>
         </v-row>
@@ -120,26 +105,23 @@
             </tr>
             <br />
             <tr
-              v-for="itemValues in itemVal"
-              :key="itemValues.id"
               class="items"
             >
-              <td>{{ itemValues.itemName }}</td>
-              <td>{{ parseFloat(itemValues.unit) }}</td>
+              <td>items</td>
+              <td>{{totalUn ? totalUn.toFixed(2) : "0.00"}}</td>
               <td>
                 <i class="moneySign fa fa-sterling-sign"></i
-                >{{ parseFloat(itemValues.rate).toFixed(2) }}
+                >{{totalRate ? totalRate.toFixed(2) : "0.00"}}
               </td>
               <td>
                 <i class="moneySign fa fa-sterling-sign"></i
-                >{{ parseFloat(itemValues.vat).toFixed(2) }}
+                >{{ totalVat.toFixed(2) }}
               </td>
               <td>
                 <i class="moneySign fa fa-sterling-sign"></i>
-                {{ itemValues.total.toFixed(2) }}
+                {{ subTotal.toFixed(2) }}
               </td>
               <td>
-                <i v-on:click="closeItem(itemValues.id)" class="close">x</i>
               </td>
             </tr>
             <br />
@@ -201,10 +183,7 @@
           ></v-text-field>
           <v-row class="d-flex mx-auto paymentMethod">
             <v-col cols="12" sm="6" class="left">
-              <h6>Payment Details</h6>
-              <p>Account name: <span>Amberley Innovations</span></p>
-              <p>Account no: <span>6795 0463 3712 </span></p>
-              <p>Routing no: <span>021000021</span></p>
+              
             </v-col>
             <v-col cols="12" sm="6" class="d-flex mt-5 justify-end right">
               <div>
@@ -233,7 +212,7 @@
             </v-col>
           </v-row>
         </div>
-      </div>
+      </div>z
     </v-col>
     <v-col cols="12" md="4">
       <RightSide  ref="childComponent" :success="this.success" :grandTotal="totalVat + subTotal" :error="valueEmptyError" @clickResponse="submitData" />
@@ -269,9 +248,10 @@ export default {
     rate:'',
     invoiceNo:'',
     purchaseNo:'',
-    customerName:'',
     description:'',
-    vat:'20%'
+    vat:'20%',
+    totalUn:0,
+    totalRate:0
   }),
   watch: {
     menu(val) {
@@ -285,40 +265,70 @@ export default {
     }
   },
   methods: {
-    closeItem(id) {
-      const data = this.itemVal.filter((data) => {
-        return id != data.id;
-      });
-      this.itemVal = data;
-    },
     setTotalOfItem() {
       const unit = this.unit;
       const rate = this.rate;
 
       this.itemTotal = unit * rate;
-      if (this.vat != undefined) {
+      if (this.vat != undefined && this.itemTotal){
         const removeParsentSign = this.vat.slice(0, -1);
         const mainValue = parseFloat(removeParsentSign);
         const vatValue = (this.itemTotal / 100) * mainValue;
         if (vatValue) {
           this.vatVal = vatValue;
         }
+      }else{
+          this.vatVal = 0;
       }
       if (this.itemVal.length != 0) {
+        //set subTotal
         let subTotalCount = 0;
         for (let i = 0; i < this.itemVal.length; i++) {
           subTotalCount = subTotalCount + this.itemVal[i].total;
         }
         this.subTotal = subTotalCount + this.itemTotal;
 
+        //set totalVat
         let countVatTotal = 0;
         for (let i = 0; i < this.itemVal.length; i++) {
           countVatTotal = countVatTotal + this.itemVal[i].vat;
         }
         this.totalVat = countVatTotal + this.vatVal;
+
+        //set Unit
+        if(this.unit){
+          let units = 0;
+          for (let i = 0; i < this.itemVal.length; i++) {
+            units = units + parseFloat(this.itemVal[i].unit);
+          }
+          this.totalUn = units + parseFloat(unit);
+        }else{
+          let units = 0;
+          for (let i = 0; i < this.itemVal.length; i++) {
+            units = units + parseFloat(this.itemVal[i].unit);
+          }
+          this.totalUn = units
+        }
+
+        //set rate
+        if(this.rate){
+          let rates = 0;
+          for (let i = 0; i < this.itemVal.length; i++) {
+            rates = rates + parseFloat(this.itemVal[i].rate);
+          }
+          this.totalRate = rates + parseFloat(rate);
+        }else{
+          let rates = 0;
+          for (let i = 0; i < this.itemVal.length; i++) {
+            rates = rates + parseFloat(this.itemVal[i].rate);
+          }
+          this.totalRate = rates
+        }
       } else {
         this.subTotal = this.itemTotal;
         this.totalVat = this.vatVal;
+        this.totalUn = parseFloat(unit)
+        this.totalRate = parseFloat(rate)
       }
     },
     vatChanged() {
@@ -338,15 +348,14 @@ export default {
       }
     },
     addItem() {
-      const random = Math.ceil(Math.random() * 10000);
       const itemName = this.item;
       const unit = this.unit;
       const rate = this.rate;
-      if (itemName == undefined || unit == undefined || rate == undefined) {
+      if (itemName == '' || unit == '' || rate == '') {
         this.itemError = "fill all fields";
       } else {
+        this.itemError = "";
         const getItemData = {
-          id: random,
           itemName,
           unit,
           rate,
@@ -367,17 +376,17 @@ export default {
     submitData(name, email, pdf) {
       const invoiceNo = this.invoiceNo;
       const purchaseNo = this.purchaseNo;
-      const customerName = this.customerName;
       if (
         invoiceNo == '' ||
         purchaseNo == '' ||
-        customerName == '' ||
         name == '' ||
         email == '' ||
         this.date == null
       ) {
         this.valueEmptyError = "Please fill all fields";
-      } else if (this.itemVal.length == 0 && this.item == '' || this.unit == '' || this.rate == '') {
+        this.itemEmptyError = "";
+      } else if (this.itemVal.length == 0 && (this.unit == '' || this.rate == '')) {
+        this.valueEmptyError = "";
         this.itemEmptyError = "You have not added any item";
       } else {
         this.valueEmptyError = "";
@@ -401,7 +410,6 @@ export default {
         formData.append('file',pdf);
         formData.append('invoiceNo',invoiceNo);
         formData.append('purchaseNo',purchaseNo);
-        formData.append('customerName',customerName);
         formData.append('name',name);
         formData.append('email',email);
         formData.append('items',JSON.stringify(items));
@@ -430,6 +438,8 @@ export default {
           this.subTotal = 0
           this.totalVat = 0
           this.$refs.childComponent.afterSubmitData();
+          this.totalUn = 0
+          this.totalRate = 0
           document.querySelector('.loader').style.display = 'none'
           document.querySelector('.alertSuccess').style.display = 'block'
           setTimeout(() => {
