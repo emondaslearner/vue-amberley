@@ -73,11 +73,9 @@ export default {
   data: () => ({
     rules: [(value) => value != '' || "Required."],
     click:true,
-    pdfError:'',
-    finalPdf: null,
     name:'',
     email:'',
-    pdf:{},
+    pdf:null,
     checkbox:false
   }),
   props:[
