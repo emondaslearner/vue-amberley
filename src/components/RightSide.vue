@@ -73,8 +73,8 @@ export default {
   data: () => ({
     rules: [(value) => value != '' || "Required."],
     click:true,
-    name:'',
-    email:'',
+    name:undefined,
+    email:undefined,
     pdf:null,
     checkbox:false
   }),

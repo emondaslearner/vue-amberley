@@ -247,9 +247,9 @@ export default {
     item:'',
     unit:'',
     rate:'',
-    invoiceNo:'',
-    purchaseNo:'',
-    description:'',
+    invoiceNo:undefined,
+    purchaseNo:undefined,
+    description:undefined,
     vat:'20%',
     totalUn:0,
     totalRate:0
@@ -378,11 +378,11 @@ export default {
       const invoiceNo = this.invoiceNo;
       const purchaseNo = this.purchaseNo;
       if (
-        invoiceNo == '' ||
-        purchaseNo == '' ||
-        name == '' ||
-        email == '' ||
-        this.description == '' ||
+        invoiceNo == undefined||
+        purchaseNo == undefined ||
+        name == undefined ||
+        email == undefined ||
+        this.description == undefined ||
         this.date == null
       ) {
         this.valueEmptyError = "Please fill all fields";
@@ -428,8 +428,7 @@ export default {
         .then( ()=> {
           this.invoiceNo = undefined
           this.purchaseNo = undefined
-          this.customerName = undefined
-          this.description = ''
+          this.description = undefined
           this.vat = '20%'
           this.item = ''
           this.unit = ''
