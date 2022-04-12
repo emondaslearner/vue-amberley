@@ -47,7 +47,7 @@
         <sub>(Vat incl.)</sub>
       </h1>
       <v-row className="d-flex pdf">
-        <h3 class="mt-8 ml-5 mb-3">attach pdf in mail</h3>
+        <h3 class="mt-8 ml-5 mb-3">attach file</h3>
         <v-col cols="12" sm="3">
           <v-checkbox
             v-model="checkbox"

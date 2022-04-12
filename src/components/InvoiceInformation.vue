@@ -175,6 +175,7 @@
             <br />
           </table>
           <v-text-field
+            :rules="rules"
             label="Description"
             hide-details="auto"
             class="mt-0 pt-1 pb-1"
@@ -381,6 +382,7 @@ export default {
         purchaseNo == '' ||
         name == '' ||
         email == '' ||
+        this.description == '' ||
         this.date == null
       ) {
         this.valueEmptyError = "Please fill all fields";
